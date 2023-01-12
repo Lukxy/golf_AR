@@ -9,7 +9,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import plotly.express as px
 import pandas as pd
-
+import plotly.express as px
 import plotly.graph_objs as go
 # from dash.dependencies import Output, Input
 from dash.dependencies import Input
@@ -36,8 +36,11 @@ x_werte = []
 
 # Layout festlegen
 fig = go.Figure(data=[go.Scatter(x= x_werte, y= y_werte )])
+df = px.data.gapminder().query("country=='Brazil'")
+fig = px.line_3d(df, x="gdpPercap", y="pop", z="year")
+# fig.show()
 
-dcc.Graph(figure=fig)
+# dcc.Graph(figure=fig)
 
 app.layout = html.Div(children=[
     html.H1(
@@ -95,11 +98,13 @@ app.layout = html.Div(children=[
     # - Abfluggeschwindigkeit des Balls
     #   -> 4 verschiedene Kategorien für Abfluggeschwindigkeit
     # - Korrekturwinkel für Wind
-    dcc.Graph(
-        id='Flugbahn',
-        figure=fig
-    ),
+    # dcc.Graph(
+    #     id='Flugbahn',
+    #     figure=fig
+    # ),
+    # dcc.Graph(figure=fig),
     html.Div(id="textarea-1",children = [])
+    
 ])
 
 ####################################
@@ -129,12 +134,21 @@ def update_graf(pos1, pos2):
             #Graph zeichnen
             fig = go.Figure(data=[go.Scatter(x = werte['x'], y = werte['y'] )])
             fig.update_yaxes(fixedrange=True)
+            
             yr = [0, 50]
             xr = [0, 300] #maximale Schlag weite eines Profis sind ca. 300 meter
+
+            fig = px.line_3d(werte, x="x", y="y", z="z")
+            # fig.show()
             fig.update_yaxes(range=yr)
             fig.update_xaxes(range=xr)
-            # dcc.Graph(figure=fig)
-            return html.Div(dcc.Graph(figure=fig))
+            
+
+            # df = px.data.gapminder().query("country=='Brazil'")
+            
+            
+            return dcc.Graph(figure=fig)
+            # return html.Div(dcc.Graph(figure=fig))
     return pos
 
 if __name__ == '__main__':
