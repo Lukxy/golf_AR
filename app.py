@@ -132,16 +132,21 @@ def update_graf(pos1, pos2):
 
             werte = flugbahn.berechne(pos, gamma)
             #Graph zeichnen
-            fig = go.Figure(data=[go.Scatter(x = werte['x'], y = werte['y'] )])
-            fig.update_yaxes(fixedrange=True)
+            # fig = go.Figure(data=[go.Scatter(x = werte['x'], y = werte['y'], z = werte['z'] )])
+            # fig.update_yaxes(fixedrange=True)
             
             yr = [0, 50]
             xr = [0, 300] #maximale Schlag weite eines Profis sind ca. 300 meter
 
-            fig = px.line_3d(werte, x="x", y="y", z="z")
+            fig = px.line_3d(werte, x="x", y="z", z="y", range_x=[0, 300], range_y=[0, 2], range_z = [0, 50])
             # fig.show()
-            fig.update_yaxes(range=yr)
-            fig.update_xaxes(range=xr)
+            # fig.update_yaxes(fixedrange=True)
+            # fig.update_yaxes(range=yr)
+            # fig.update_layout(yaxis_range=[0,50])
+            # fig.update_yaxes(range = [0,50])
+            # fig.update_xaxes(range=xr)
+            # fig.update_layout(xaxis_range=[0,300])
+            # fig.update_xaxes(range = [0,300])
             
 
             # df = px.data.gapminder().query("country=='Brazil'")
