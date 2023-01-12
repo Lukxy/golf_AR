@@ -1,6 +1,9 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
+#import von anderen Files
+import flugbahn_berechnung as flugbahn
+
 from dash import Dash
 import dash_html_components as html
 import dash_core_components as dcc
@@ -125,6 +128,7 @@ def update_graf(pos1, pos2):
 
     if pos1:
         if pos2:
+            # werte = flugbahn.berechne(pos)
             start_list = [[1, 230, 304], [2, 344, 99], [3, 122, 593], [4, 23, 215], [5, 412, 376]]
             ziel_list = [[1, 345, 212], [2, 356, 123], [3, 432, 348], [4, 3465, 234], [5, 500, 2123]]
             x = int(ziel_list[int(pos[1])][1]) - int(start_list[int(pos[0]) ][1])
