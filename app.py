@@ -151,6 +151,8 @@ def update_graf(pos1, pos2):
 
             # df = px.data.gapminder().query("country=='Brazil'")
             
+            #Ansicht ändern
+            fig.update_layout(scene_camera=dict( eye=dict( x=-2, y=-0.6, z=0.1 ) ) )
             
             return dcc.Graph(figure=fig)
             # return html.Div(dcc.Graph(figure=fig))
