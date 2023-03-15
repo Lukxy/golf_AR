@@ -1,6 +1,19 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
+#########################################################################################################################################################################################
+# beim ersten starten tritt ein Fehler auf:                                                                                                                                             #
+#  ImportError: cannot import name 'get_current_traceback' from 'werkzeug.debug.tbtools' (C:\Users\...\anaconda3\envs\Projekt_AR_Golf\lib\site-packages\werkzeug\debug\tbtools.py)      #
+#                                                                                                                                                                                       #
+# Dieser lässt sich einfach beheben:                                                                                                                                                    #   
+#  -> in Datei \dash.py navigieren                                                                                                                                                      #   
+#  -> Zeile 22: from werkzeug.debug.tbtools import get_current_traceback                                                                                                                #
+#  -> ändern zu: from werkzeug.debug.tbtools import DebugTraceback                                                                                                                      #   
+#  -> get_current_traceback   wird zu   DebugTraceback                                                                                                                                  #   
+#                                                                                                                                                                                       #
+# https://github.com/plotly/dash/issues/1992                                                                                                                                            #
+#########################################################################################################################################################################################
+
 #import von anderen Files
 import flugbahn_berechnung as flugbahn
 
