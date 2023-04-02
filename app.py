@@ -7,12 +7,18 @@
 #                                                                                                                                                                                       #
 # Dieser lässt sich einfach beheben:                                                                                                                                                    #   
 #  -> in Datei \dash.py navigieren                                                                                                                                                      #   
+#  -> in Datei \dash.py navigieren                                                                                                                                                      #   
+#       ->            C:\Users\NAME\anaconda3\envs\Projekt_AR_Golf\Lib\site-packages\dash\dash.py                                                                                       #   
 #  -> Zeile 22: from werkzeug.debug.tbtools import get_current_traceback                                                                                                                #
 #  -> ändern zu: from werkzeug.debug.tbtools import DebugTraceback                                                                                                                      #   
 #  -> get_current_traceback   wird zu   DebugTraceback                                                                                                                                  #   
 #                                                                                                                                                                                       #
 # https://github.com/plotly/dash/issues/1992                                                                                                                                            #
 #########################################################################################################################################################################################
+
+#############
+# Wir verwenden das Framework dash / plotly
+#############
 
 #import von anderen Files
 import flugbahn_berechnung as flugbahn
@@ -24,7 +30,6 @@ import plotly.express as px
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
-# from dash.dependencies import Output, Input
 from dash.dependencies import Input
 from dash.dependencies import Output
 
@@ -38,44 +43,30 @@ colors = {
     'text': '#7FDBFF'
 }
 
-# Funktionen
-
-# Reichweite berechnen
+# Werte für die Berechnung
 y_werte = []
 x_werte = []
-# for i in range(44):
-#     y_werte.append( math.tan(math.pi/4) * i - 9.81 / (2 * 20**2.0 * (math.cos(math.pi/4))**2.0 ) * i**2.0 )
-#     x_werte.append(i)
 
-# Layout festlegen
-fig = go.Figure(data=[go.Scatter(x= x_werte, y= y_werte )])
-df = px.data.gapminder().query("country=='Brazil'")
-fig = px.line_3d(df, x="gdpPercap", y="pop", z="year")
-# fig.show()
-
-# dcc.Graph(figure=fig)
-
+# Festlegen vom Layout der Seite
 app.layout = html.Div(children=[
+    # Überschrift der Seite
     html.H1(
-        children='Hello Dash',
+        children='Golf-AR',
         style={
             'textAlign': 'center',
             'color': colors['text']
         }
     ),
-
-    html.Div(children='Dash: A web application framework for your data.', style={
+    # einfacher Text:
+    html.Div(children='Damit du den perfekten Schlag machst!', style={
         'textAlign': 'center',
         'color': colors['text']
     }),
-
-    
-    # benötigter Inputt
-    # - GPS (Position) => Dropdown mit 5 verschiedenenen Positionen
-    # - Loch-Auswahl (Position) => Dropdown der Löcher
-    # - Windgeschwindigkeit (v in m/s) => random 
-    # - Windrichtung (8 verschiedene Himmelsrichtungen in Grad rechnen lassen) => Random und aber Dropdown auswaählbar
-    
+    html.Div(children='Das Dieagramm geht bis 300m, diese Weite entspricht eineSchalgweite eines Profispielers.', style={
+        'textAlign': 'center',
+        'color': colors['text']
+    }),
+    # Auswahl von der Startposition
     dcc.Dropdown(
         id='start-dropdown', 
         options=[
@@ -89,7 +80,7 @@ app.layout = html.Div(children=[
         placeholder='Wähle eine Startposition',
         ),
         html.Div(id='dropdown'),
-
+    # Auswahl der Lochposition
     dcc.Dropdown(
         id='ziel-dropdown',
         options=[
@@ -106,26 +97,12 @@ app.layout = html.Div(children=[
     html.Div(
         id = 'graf'
     ),
-
-    # Ausgabe:
-    # - Abfluggeschwindigkeit des Balls
-    #   -> 4 verschiedene Kategorien für Abfluggeschwindigkeit
-    # - Korrekturwinkel für Wind
-    # dcc.Graph(
-    #     id='Flugbahn',
-    #     figure=fig
-    # ),
-    # dcc.Graph(figure=fig),
-    html.Div(id="textarea-1",children = [])
-    
 ])
 
 ####################################
 # CALLBACKS #######################
 @app.callback(
     Output('graf', 'children'),
-    # Output('Flugbahn', 'figure'),
-    # Output('textarea-1', 'children'),
     [Input('start-dropdown', 'value'), Input('ziel-dropdown', 'value')],
     prevent_initial_call = True,
 )
@@ -139,36 +116,20 @@ def update_graf(pos1, pos2):
     if pos1:
         if pos2:
             #Steigwinkel wird als konstant angenommen
+            # Berechnung:
             gamma = math.pi / 6
 
             ablenkwinkel = flugbahn.ablenkwinkel(pos, gamma)
 
             werte = flugbahn.berechne(pos, gamma)
-            #Graph zeichnen
-            # fig = go.Figure(data=[go.Scatter(x = werte['x'], y = werte['y'], z = werte['z'] )])
-            # fig.update_yaxes(fixedrange=True)
             
-            yr = [0, 50]
-            xr = [0, 300] #maximale Schlag weite eines Profis sind ca. 300 meter
-
+            # Updaten der des Diagramms
             fig = px.line_3d(werte, x="x", y="z", z="y", range_x=[0, 300], range_y=[0, 2], range_z = [0, 50])
-            # fig.show()
-            # fig.update_yaxes(fixedrange=True)
-            # fig.update_yaxes(range=yr)
-            # fig.update_layout(yaxis_range=[0,50])
-            # fig.update_yaxes(range = [0,50])
-            # fig.update_xaxes(range=xr)
-            # fig.update_layout(xaxis_range=[0,300])
-            # fig.update_xaxes(range = [0,300])
-            
-
-            # df = px.data.gapminder().query("country=='Brazil'")
-            
+           
             #Ansicht ändern
             fig.update_layout(scene_camera=dict( eye=dict( x=-2, y=-0.6, z=0.1 ) ) )
             
-            return dcc.Graph(figure=fig)
-            # return html.Div(dcc.Graph(figure=fig))
+            return dcc.Graph(figure=fig, style={'width': '90vh', 'height': '90vh'})
     return pos
 
 if __name__ == '__main__':
